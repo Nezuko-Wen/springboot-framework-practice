@@ -1,15 +1,18 @@
 package com.zzw.springboot.demo.utils;
 import java.io.Serializable;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zzw.springboot.demo.security.GrantedAuthorityImpl;
 import com.zzw.springboot.demo.security.JwtAuthenticatioToken;
+import io.jsonwebtoken.JwtBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -69,7 +72,14 @@ public class JwtTokenUtils implements Serializable {
      */
     private static String generateToken(Map<String, Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
-        return Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS256, SECRET).compact();
+		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+		// 添加构成JWT的参数
+		Map<String, Object> headMap = new HashMap<String, Object>();
+		// Header { "alg": "HS256", "typ": "JWT" }
+		headMap.put("alg", SignatureAlgorithm.HS256.getValue());
+		headMap.put("typ", "JWT");
+        return Jwts.builder().setHeader(headMap).setClaims(claims).setExpiration(expirationDate)
+				.signWith(SignatureAlgorithm.HS256, SECRET).compact();
     }
 
     /**
