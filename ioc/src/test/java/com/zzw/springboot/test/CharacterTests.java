@@ -1,10 +1,10 @@
 package com.zzw.springboot.test;
 
 import com.zzw.springboot.demo.SpringbootDemoApplication;
-import com.zzw.springboot.demo.config.BeanUtils;
-import com.zzw.springboot.demo.event.TestPublisher;
-import com.zzw.springboot.demo.service.UserService;
-import org.junit.jupiter.api.Test;
+import com.zzw.springboot.demo.bean.AutoWireByTypeBean;
+import com.zzw.springboot.demo.methodinjection.CommandManager;
+import com.zzw.springboot.demo.methodinjection.MyValueCalculator;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,29 +13,27 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SpringbootDemoApplication.class)
 public class CharacterTests {
-
     @Autowired
-    private BeanUtils beanUtils;
+    private AutoWireByTypeBean autoWireByTypeBean;
     @Autowired
-    private TestPublisher testPublisher;
+    private CommandManager commandManager;
     @Autowired
-    private UserService userServiceImpl1;
-    @Autowired
-    private UserService userServiceImpl2;
+    private MyValueCalculator myValueCalculator;
 
     @Test
-    void contextLoads() {
-        beanUtils.getBean("testBean");
+    public void autoWireByType() {
+        autoWireByTypeBean.size();
     }
 
     @Test
-    void eventListenerTest() {
-        testPublisher.method();
+    public void lookMethodInject() {
+        for (;;) {
+            commandManager.process(1);
+        }
     }
 
     @Test
-    void iocTest() {
-        userServiceImpl1.showName();
-        userServiceImpl2.showName();
+    public void replaceMethodInject() {
+        System.out.println(myValueCalculator.computeValue("zzw"));
     }
 }
