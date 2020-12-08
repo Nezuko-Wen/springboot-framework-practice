@@ -1,11 +1,13 @@
 package com.zzw.springboot.demo.methodinjection;
 
-import lombok.Data;
-@Data
 public class Command {
     public Object state;
 
+    public void setState(Object state) {
+        this.state = state;
+    }
+
     public void excute() {
-        System.out.println(state);
+        System.out.println(this.state);
     }
 }
